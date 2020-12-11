@@ -1,0 +1,77 @@
+---
+title: "Variance Stabilizing transformation"
+author: "Md. Mustafa Manery"
+date: "12/11/2020"
+output: word_document
+---
+
+```{r}
+getwd()
+setwd("E:/r/AST504")
+```
+
+```{r}
+install.packages("outliers")
+library(outliers)
+```
+
+```{r}
+dat<-read.csv("Mid 2 504.csv")
+str(dat)
+```
+```{r}
+?cochran.test
+```
+```{r}
+cochran.test(dat$dep,dat,inlying=False)
+```
+
+```{r}
+anova<- aov(dep~Method,data=dat)
+summary(anova)
+par(mfrow=c(2,2))
+plot(anova)
+```
+```{r}
+bartlett.test(dep~Method,data=dat)
+```
+
+Note: Since p value is less than 0.05, the data doesnot have equal variances.
+
+```{r}
+sigmayi<-tapply(dat$dep, dat$Method, sd)
+sigmayi
+logsigmayi<-log(sigmayi)
+logsigmayi
+mui<-tapply(dat$dep, dat$Method,mean)
+mui
+logmui<-log(mui)
+logmui
+plot(logsigmayi,logmui,type="l")
+lm(logsigmayi~logmui)
+```
+
+Note: Beta value is 1.
+
+```{r}
+dat<-read.csv("Mid 2 504.csv")
+str(dat)
+```
+
+```{r}
+bartlett.test(dep1~Method,data=dat)
+```
+
+Note: Since p vlaue is greater than 0.05, null hypothesis not rejected. So we can say variances after transformation are equal.
+
+```{r}
+anova1<- aov(dep1~Method,data=dat)
+summary(anova1)
+par(mfrow=c(2,2))
+plot(anova1)
+```
+
+Note: Since p values is less than 0.05, null hypothesis is rejected. Which means means of different methods are different.
+
+
+
